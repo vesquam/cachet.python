@@ -8,8 +8,8 @@ class Cachet(object):
         self.url = url
         self.apiToken = apiToken
 
-    def __getRequest(self, path):
-        return requests.get(self.url + path, headers={'X-Cachet-Token': self.apiToken})
+    def __getRequest(self, path, params=None):
+        return requests.get(self.url + path, params=params, headers={'X-Cachet-Token': self.apiToken})
 
     def __postRequest(self, path, data):
         return requests.post(self.url + path, data, headers={'X-Cachet-Token': self.apiToken})
@@ -45,17 +45,17 @@ class Cachet(object):
         :return: :class:`Response <Response>` object
         :rtype: requests.Response
         '''
-
-        return self.__getRequest('/components?'+
-            ('id=%d'%id if id!=None else '')+
-            ('name=%s'%name if name!=None else '')+
-            ('status=%s'%status if status!=None else '')+
-            ('group_id=%s'%group_id if group_id!=None else '')+
-            ('enabled=%s'%enabled if enabled!=None else '')+
-            ('sort=%s'%sort if sort!=None else '')+
-            ('order=%s'%order if order!=None else '')+
-            ('per_page=%d'%per_page if per_page!=None else '')
-            )
+        params={}
+        params['id']=id
+        params['name']=name
+        params['status']=status
+        params['group_id']=group_id
+        params['enabled']=enabled
+        params['sort']=sort
+        params['order']=order
+        params['per_page']=per_page
+        
+        return self.__getRequest('/components', params=params)
 
     def getComponentsByID(self, id):
         '''Return a single component.
@@ -126,16 +126,16 @@ class Cachet(object):
         :return: :class:`Response <Response>` object
         :rtype: requests.Response
         '''
+        params={}
+        params['id']=id
+        params['name']=name
+        params['collapsed']=collapsed
+        params['visible']=visible
+        params['sort']=sort
+        params['order']=order
+        params['per_page']=per_page
 
-        return self.__getRequest('/components/groups?'+
-            ('id=%d'%id if id!=None else '')+
-            ('name=%s'%name if name!=None else '')+
-            ('collapsed=%s'%collapsed if collapsed!=None else '')+
-            ('visible=%s'%visible if visible!=None else '')+
-            ('sort=%s'%sort if sort!=None else '')+
-            ('order=%s'%order if order!=None else '')+
-            ('per_page=%d'%per_page if per_page!=None else '')
-            )
+        return self.__getRequest('/components/groups', params=params)
 
     def getComponentsGroupsByID(self, id):
         '''
@@ -199,16 +199,18 @@ class Cachet(object):
         :return: :class:`Response <Response>` object
         :rtype: requests.Response
         '''
-        return self.__getRequest( '/incidents?'+
-            ('id=%d'%id if id!=None else '')+
-            ('component_id=%d'%component_id if component_id!=None else '')+
-            ('name=%s'%name if name!=None else '')+
-            ('status=%d'%status if status!=None else '')+
-            ('visible=%s'%visible if visible!=None else '')+
-            ('sort=%s'%sort if sort!=None else '')+
-            ('order=%s'%order if order!=None else '')+
-            ('per_page=%d'%per_page if per_page!=None else '')
-            )
+        
+        params={}
+        params['id']=id
+        params['component_id']=component_id
+        params['name']=name
+        params['status']=status
+        params['visible']=visible
+        params['sort']=sort
+        params['order']=order
+        params['per_page']=per_page
+        
+        return self.__getRequest( '/incidents', params=params)
     
     def getIncidentsByID(self, id):
         '''Returns a single incident.
